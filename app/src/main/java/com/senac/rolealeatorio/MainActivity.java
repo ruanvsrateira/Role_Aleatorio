@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         EditText editTextSenha = findViewById(R.id.editTextSenha);
         EditText editTextDataNascimento = findViewById(R.id.editTextDataNascimento);
 
+        Conexao conexao = new Conexao();
+        Connection con = conexao.getConexaoMySQL();
+
         finalizarCadastroUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,7 +43,24 @@ public class MainActivity extends AppCompatActivity {
                 usuario.CPF = editTextCPF.getText().toString();
                 //usuario.dataNascimento = new Date(editTextDataNascimento.getText().toString());
 
-                Toast.makeText(MainActivity.this, usuario.toString(), Toast.LENGTH_LONG).show();
+                Conexao conexao = new Conexao();
+                Connection con = conexao.getConexaoMySQL();
+
+                String sql = "INSERT INTO usuario (CPF, NOME, SOBRENOME) values (? , ?, ?);";
+
+                PreparedStatement ps = null;
+
+                conexao.statusConection();
+                try {
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, usuario.CPF);
+                    ps.setString(2, usuario.nome);
+                    ps.setString(3, usuario.sobrenome);
+
+                    ps.executeQuery();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
