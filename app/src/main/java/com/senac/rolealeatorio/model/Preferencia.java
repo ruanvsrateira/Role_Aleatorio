@@ -1,4 +1,4 @@
-package com.senac.rolealeatorio;
+package com.senac.rolealeatorio.model;
 
 public class Preferencia {
     String tipo;

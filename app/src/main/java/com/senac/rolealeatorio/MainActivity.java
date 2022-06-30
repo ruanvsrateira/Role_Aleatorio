@@ -3,15 +3,13 @@ package com.senac.rolealeatorio;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Date;
+import com.senac.rolealeatorio.dao.UsuarioDAO;
+import com.senac.rolealeatorio.model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         Button finalizarCadastroUsuario = findViewById(R.id.buttonFinalizarCadastroUsuario);
         Button limparCadastroUsuario = findViewById(R.id.buttonLimpar);
@@ -29,38 +30,19 @@ public class MainActivity extends AppCompatActivity {
         EditText editTextSenha = findViewById(R.id.editTextSenha);
         EditText editTextDataNascimento = findViewById(R.id.editTextDataNascimento);
 
-        Conexao conexao = new Conexao();
-        Connection con = conexao.getConexaoMySQL();
-
         finalizarCadastroUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Usuario usuario = new Usuario();
-                usuario.nome = editTextNome.getText().toString();
-                usuario.sobrenome = editTextSobrenome.getText().toString();
-                usuario.email = editTextEmail.getText().toString();
-                usuario.senha = editTextSenha.getText().toString();
-                usuario.CPF = editTextCPF.getText().toString();
-                //usuario.dataNascimento = new Date(editTextDataNascimento.getText().toString());
+                usuario.setNome(editTextNome.getText().toString());
+                usuario.setSobrenome(editTextSobrenome.getText().toString());
+                usuario.setEmail(editTextEmail.getText().toString());
+                usuario.setSenha(editTextSenha.getText().toString());
+                usuario.setCPF(editTextCPF.getText().toString());
 
-                Conexao conexao = new Conexao();
-                Connection con = conexao.getConexaoMySQL();
+                UsuarioDAO dao = new UsuarioDAO(MainActivity.this, "roleAleatorio", null, 1);
 
-                String sql = "INSERT INTO usuario (CPF, NOME, SOBRENOME) values (? , ?, ?);";
-
-                PreparedStatement ps = null;
-
-                conexao.statusConection();
-                try {
-                    ps = con.prepareStatement(sql);
-                    ps.setString(1, usuario.CPF);
-                    ps.setString(2, usuario.nome);
-                    ps.setString(3, usuario.sobrenome);
-
-                    ps.executeQuery();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                dao.salva(usuario);
             }
         });
 
