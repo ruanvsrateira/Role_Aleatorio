@@ -25,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
 
         EditText email = findViewById(R.id.editTextEmailLogin);
 
+        TextView cadastrarPreferencia = findViewById(R.id.textViewCadastrarPreferencia);
+
         btnEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +64,14 @@ public class LoginActivity extends AppCompatActivity {
                         email.setTextColor(Color.BLACK);
                     }
                 }
+            }
+        });
+
+        cadastrarPreferencia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intencao = new Intent(LoginActivity.this, PreferenciaActivity.class);
+                startActivity(intencao);
             }
         });
     }
