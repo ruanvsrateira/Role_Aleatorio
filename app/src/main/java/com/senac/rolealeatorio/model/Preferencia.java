@@ -19,4 +19,12 @@ public class Preferencia {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public boolean isNomeEmptyOrNull () {
+      return (nome.isEmpty() || nome == null);
+    };
+
+    public boolean isTipoEmptyOrNull () {
+        return (tipo.isEmpty() || tipo == null);
+    };
 }
